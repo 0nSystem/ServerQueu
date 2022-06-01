@@ -26,7 +26,8 @@ namespace ServerQueu
             while (sessionEnum.MoveNext())
             {
                 Session session = sessionEnum.Current;
-
+                GameTask gameTask = new GameTask(session);
+                gameTask.RunTask();
             }
             
         }
