@@ -19,17 +19,16 @@ namespace ServerQueu
             Sessions = sessions;
         }
 
-        public void RunQueu()
+        public bool RunQueu()
         {
-            IEnumerator<Session> sessionEnum= Sessions.GetEnumerator();
-            
-            while (sessionEnum.MoveNext())
+            //Pendiente de hacerlo como un servicio
+            if (Sessions.TryDequeue(out var newSession))
             {
-                Session session = sessionEnum.Current;
-                GameTask gameTask = new GameTask(session);
-                gameTask.RunTask();
+                GameTask gameTask = new GameTask(newSession);
+                return gameTask.RunTask();
             }
-            
+
+            return false;
         }
 
 

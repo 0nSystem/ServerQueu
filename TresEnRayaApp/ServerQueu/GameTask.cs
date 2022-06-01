@@ -16,9 +16,9 @@ namespace ServerQueu
 
         }
 
-        public void RunTask()
+        public bool RunTask()
         {
-            ThreadPool.QueueUserWorkItem(CreateSessionTask);
+            return ThreadPool.QueueUserWorkItem(CreateSessionTask);
         }
 
         private static void CreateSessionTask(Object? stateInfo)
