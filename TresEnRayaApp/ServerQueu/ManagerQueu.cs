@@ -19,7 +19,7 @@ namespace ServerQueu
             Sessions = sessions;
         }
 
-        public bool RunQueu()
+        public bool RunFirstElement()
         {
             //Pendiente de hacerlo como un servicio
             if (Sessions.TryDequeue(out var newSession))

@@ -27,7 +27,7 @@ namespace ServerQueu.Test
 
             var managerQueu = new ManagerQueu(ref collectionSession);
             Assert.IsTrue(managerQueu.Sessions.Count == 1);
-            Assert.IsTrue(managerQueu.RunQueu());
+            Assert.IsTrue(managerQueu.RunFirstElement());
             Assert.IsTrue(managerQueu.Sessions.Count == 0);
 
 
