@@ -17,19 +17,26 @@ namespace TresEnRayaApp
         }
         public void AddClient(TcpClient tcpClient)
         {
-            if (Sessions.Count==0|Sessions[Sessions.Count].CompleteClients())
+            if (Sessions.Count==0)
             {
-                Session session = new Session();
-                session.AddClient(tcpClient);
-                Sessions.Add(session);
+               AddNewSession(tcpClient);
+            }
+            else if (Sessions[Sessions.Count-1].CompleteClients())
+            {
+                AddNewSession(tcpClient);
             }
             else
             {
-                Sessions[Sessions.Count].AddClient(tcpClient);
+                Sessions[Sessions.Count-1].AddClient(tcpClient);
             }
 
         }
 
-        
+        private void AddNewSession(TcpClient tcpClient)
+        {
+            Session session = new Session();
+            session.AddClient(tcpClient);
+            Sessions.Add(session);
+        }
     }
 }

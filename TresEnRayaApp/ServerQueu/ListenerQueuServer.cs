@@ -7,14 +7,21 @@ using System.Threading.Tasks;
 
 namespace TresEnRayaApp
 {
-    public class ListenerQueuServer 
+    public class ListenerQueuServer
     {
         private readonly string Ip;
         private readonly int Port;
         private readonly int Backlog;
 
-        private TcpListener? TcpSocketServer=null;
-        private Thread? Thread=null;
+        private TcpListener? _tcpSocketServer = null;
+        public TcpListener? TcpSocketServer { get { return _tcpSocketServer; } }
+
+        private Thread? _thread = null;
+        public Thread? Thread
+        {
+            get { return _thread; }
+        }
+
         private HandlerSessionListener? HandlerSessionListener=null;
         public ListenerQueuServer(string ip,int port,int backlog)
         {
@@ -27,27 +34,27 @@ namespace TresEnRayaApp
         {
             EnabledTcpSocketServer();
             
-            Thread= new Thread(() =>
+            _thread= new Thread(() =>
             {
-                if (TcpSocketServer != null&&HandlerSessionListener!=null)
+                if (_tcpSocketServer != null&&HandlerSessionListener!=null)
                 {
-                    while (TcpSocketServer.Server.IsBound)
+                    while (_tcpSocketServer.Server.IsBound)
                     {
-                        TcpClient tcpClient= TcpSocketServer.AcceptTcpClient();
+                        TcpClient tcpClient= _tcpSocketServer.AcceptTcpClient();
                         HandlerSessionListener.AddClient(tcpClient);
                     }
                 }
 
             });
 
-            Thread.Start();
+            _thread.Start();
         }
 
 
         private void EnabledTcpSocketServer()
         {
-            TcpSocketServer=new TcpListener(System.Net.IPAddress.Parse(Ip),Port);
-            TcpSocketServer.Start(Backlog);
+            _tcpSocketServer=new TcpListener(System.Net.IPAddress.Parse(Ip),Port);
+            _tcpSocketServer.Start(Backlog);
             HandlerSessionListener = new HandlerSessionListener();
         }
 
