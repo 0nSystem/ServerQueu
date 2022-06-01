@@ -9,11 +9,12 @@ namespace ServerQueu
 {
     public class GameTask
     {
-        private readonly Session Session;
-        public GameTask(Session session)
-        {
-            Session = session;
 
+        public readonly PipeClients Pipe;
+        public GameTask(ref Session session)
+        {
+            Pipe= new PipeClients(ref session);
+            
         }
 
         public bool RunTask()

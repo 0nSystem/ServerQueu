@@ -24,7 +24,7 @@ namespace ServerQueu
             //Pendiente de hacerlo como un servicio
             if (Sessions.TryDequeue(out var newSession))
             {
-                GameTask gameTask = new GameTask(newSession);
+                GameTask gameTask = new GameTask(ref newSession);
                 return gameTask.RunTask();
             }
 
