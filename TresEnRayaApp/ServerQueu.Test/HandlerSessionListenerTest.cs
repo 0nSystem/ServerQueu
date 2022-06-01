@@ -17,8 +17,6 @@ namespace ServerQueu.Test
         [Test]
         public void AddClientesInHandlerSession()
         {
-            var a = new System.Collections.Generic.List<string>();
-            int n=a.Count;
             var handlerSessions = new HandlerSessionListener();
             Assert.AreEqual(0, handlerSessions.Sessions.Count);
 
