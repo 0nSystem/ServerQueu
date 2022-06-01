@@ -58,7 +58,8 @@ namespace TresEnRayaApp
         {
             _tcpSocketServer=new TcpListener(System.Net.IPAddress.Parse(Ip),Port);
             _tcpSocketServer.Start(Backlog);
-            HandlerSessionListener = new HandlerSessionListener();
+            var sessionCollection = new System.Collections.Concurrent.ConcurrentQueue<Session>();
+            HandlerSessionListener = new HandlerSessionListener(ref sessionCollection);
         }
 
     }
