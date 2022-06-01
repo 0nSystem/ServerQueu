@@ -8,28 +8,20 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\dgarcias\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\dani\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dgarcias\\Documents\\Proyects\\TresEnRaya\\TresEnRayaApp\\ServerQueu\\ServerQueu.csproj",
+      "projectUniqueName": "C:\\Users\\dani\\Documents\\Proyects\\TresEnRaya\\TresEnRayaApp\\ServerQueu\\ServerQueu.csproj",
       "projectName": "ServerQueu",
-      "projectPath": "C:\\Users\\dgarcias\\Documents\\Proyects\\TresEnRaya\\TresEnRayaApp\\ServerQueu\\ServerQueu.csproj",
-      "packagesPath": "C:\\Users\\dgarcias\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dgarcias\\Documents\\Proyects\\TresEnRaya\\TresEnRayaApp\\ServerQueu\\obj\\",
+      "projectPath": "C:\\Users\\dani\\Documents\\Proyects\\TresEnRaya\\TresEnRayaApp\\ServerQueu\\ServerQueu.csproj",
+      "packagesPath": "C:\\Users\\dani\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\dani\\Documents\\Proyects\\TresEnRaya\\TresEnRayaApp\\ServerQueu\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
-      ],
       "configFilePaths": [
-        "C:\\Users\\dgarcias\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\dani\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"

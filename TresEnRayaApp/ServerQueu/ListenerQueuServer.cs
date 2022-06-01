@@ -16,13 +16,16 @@ namespace TresEnRayaApp
         private TcpListener? _tcpSocketServer = null;
         public TcpListener? TcpSocketServer { get { return _tcpSocketServer; } }
 
-        private Thread? _thread = null;
-        public Thread? Thread
+        private Thread? _threadListener = null;
+        public Thread? ThreadListener
         {
-            get { return _thread; }
+            get { return _threadListener; }
         }
 
         private HandlerSessionListener? HandlerSessionListener=null;
+
+
+
         public ListenerQueuServer(string ip,int port,int backlog)
         {
             this.Ip = ip;
@@ -30,11 +33,11 @@ namespace TresEnRayaApp
             this.Backlog = backlog;
         }
 
-        public void RunThread()
+        public void RunThreads()
         {
             EnabledTcpSocketServer();
             
-            _thread= new Thread(() =>
+            _threadListener= new Thread(() =>
             {
                 if (_tcpSocketServer != null&&HandlerSessionListener!=null)
                 {
@@ -47,7 +50,7 @@ namespace TresEnRayaApp
 
             });
 
-            _thread.Start();
+            _threadListener.Start();
         }
 
 

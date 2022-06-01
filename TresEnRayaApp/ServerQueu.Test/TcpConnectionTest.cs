@@ -19,7 +19,7 @@ namespace ServerQueu.Test
         {
             string mensaje = "Hola TestBasico";
 
-            TcpListener tcpListener = new TcpListener(System.Net.IPAddress.Parse(Ip), Port);
+            TcpListener tcpListener = new  (System.Net.IPAddress.Parse(Ip), Port);
             TcpClient tcpClient = new TcpClient();
 
             tcpListener.Start();

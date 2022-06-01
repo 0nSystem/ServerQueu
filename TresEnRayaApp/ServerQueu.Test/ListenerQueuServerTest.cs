@@ -15,25 +15,23 @@ namespace ServerQueu.Test
         {
             
             var listenerQueuServer = new ListenerQueuServer(Ip,Port,2);
-            Assert.IsNull(listenerQueuServer.Thread);
+            Assert.IsNull(listenerQueuServer.ThreadListener);
 
-            listenerQueuServer.RunThread();
-            if (listenerQueuServer.Thread!=null)
+            listenerQueuServer.RunThreads();
+            if (listenerQueuServer.ThreadListener!=null)
             {
-                Assert.AreEqual(ThreadState.Running, listenerQueuServer.Thread.ThreadState);
+                Assert.AreEqual(ThreadState.Running, listenerQueuServer.ThreadListener.ThreadState);
             }
             else
             {
                 Assert.Fail();
             }
-
-            Assert.Pass();
         }
 
         public void BasicFuntion()
         {
             var listenerQueuServer = new ListenerQueuServer(Ip, Port, 2);
-            listenerQueuServer.RunThread();
+            listenerQueuServer.RunThreads();
 
         }
     }
