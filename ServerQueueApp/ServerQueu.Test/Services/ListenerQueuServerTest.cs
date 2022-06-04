@@ -25,8 +25,10 @@ namespace ServerQueu.Test
             listenerQueuServer.RunThreads();
             if (listenerQueuServer.ThreadListener!=null)
             {
-                Assert.AreEqual(ThreadState.Running, listenerQueuServer.ThreadListener.ThreadState);
+                var stateThread = listenerQueuServer.ThreadListener.ThreadState;
                 listenerQueuServer.Close();
+                Assert.AreEqual(ThreadState.Running,stateThread);
+                
             }
             else
             {
@@ -45,7 +47,7 @@ namespace ServerQueu.Test
             var client1 = new TcpClient(Ip, Port);
             var client2 = new TcpClient(Ip, Port);
 
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
 
             Assert.AreEqual(1,collection.Count);
 
@@ -76,6 +78,7 @@ namespace ServerQueu.Test
                 collectionToRead.TryDequeue(out var mensaje1);
                 collectionToRead.TryDequeue(out var mensaje2);
                 listenerQueuServer.Close();
+
                 Assert.Multiple(() =>
                 {
                     Assert.AreEqual(mensaje, Encoding.UTF8.GetString(bufferClien1));
