@@ -13,17 +13,26 @@ namespace ServerQueu.Test
 {
     public class ManagerQueuTest
     {
+
+        private string IP=default!;
+        private int Port;
+
+        [SetUp]
+        public void SetUp()
+        {
+            IP="127.0.0.1";
+            Port = 8000;
+        }
         [Test]
         public void BasicFuntion()
         {
             var collectionSession = new ConcurrentQueue<Session>();
+            collectionSession.Enqueue(new Session());
+            HandlerSessionListener handler=new HandlerSessionListener(ref collectionSession);
             
-            var client1 = new TcpClient();
-            var client2 = new TcpClient();
-            var session=new Session();
-            session.AddClient(client1);
-            session.AddClient(client2);
-            collectionSession.Enqueue(session);
+            ListenerQueuServer listenerQueuServer = new ListenerQueuServer(IP,Port,2,handler);
+            listenerQueuServer.RunThreads();
+
 
             var managerQueu = new ManagerQueu(ref collectionSession);
             Assert.IsTrue(managerQueu.Sessions.Count == 1);

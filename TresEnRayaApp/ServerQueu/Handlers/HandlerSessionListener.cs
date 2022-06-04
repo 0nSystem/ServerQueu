@@ -9,7 +9,7 @@ namespace TresEnRayaApp
 {
     public class HandlerSessionListener
     {
-        public readonly ConcurrentQueue<Session> Sessions;
+        private readonly ConcurrentQueue<Session> Sessions;
 
         private Session? BufferSession=null;
 

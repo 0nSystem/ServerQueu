@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace ServerQueu
 {
-    public struct GameInfo
+    public struct TresEnRaya
     {
+
         public int[,] Board { get; } = new int[3,3];
         public bool FinishGame { get; set; }= false;
         
-        public GameInfo()
+        public TresEnRaya()
         {
 
      
         }
+
     }
 }
