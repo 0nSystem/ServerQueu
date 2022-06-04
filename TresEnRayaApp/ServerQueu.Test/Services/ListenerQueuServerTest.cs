@@ -10,7 +10,7 @@ namespace ServerQueu.Test
 {
     public class ListenerQueuServerTest
     {
-        int Port = 11129;
+        int Port = 55555;
         string Ip="127.0.0.1";
 
         [Test]
@@ -75,6 +75,7 @@ namespace ServerQueu.Test
                 Assert.AreEqual(2, collectionToRead.Count);
                 collectionToRead.TryDequeue(out var mensaje1);
                 collectionToRead.TryDequeue(out var mensaje2);
+                listenerQueuServer.Close();
                 Assert.Multiple(() =>
                 {
                     Assert.AreEqual(mensaje, Encoding.UTF8.GetString(bufferClien1));
@@ -82,7 +83,7 @@ namespace ServerQueu.Test
                     Assert.AreEqual(mensaje, mensaje1);
                     Assert.AreEqual(mensaje, mensaje2);
                 });
-                listenerQueuServer.Close();
+                
             }
             else
             {

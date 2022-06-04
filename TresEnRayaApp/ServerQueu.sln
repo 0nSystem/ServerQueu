@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerQueu", "ServerQueu\ServerQueu.csproj", "{E451CD3A-CC7A-4865-946D-BEA67E55B7FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerQueu.Test", "ServerQueu.Test\ServerQueu.Test.csproj", "{8E95D224-0B3F-4B74-9388-72FF93CE61ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerQueu.Test", "ServerQueu.Test\ServerQueu.Test.csproj", "{8E95D224-0B3F-4B74-9388-72FF93CE61ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
