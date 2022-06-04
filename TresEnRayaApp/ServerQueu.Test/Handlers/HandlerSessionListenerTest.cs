@@ -19,19 +19,19 @@ namespace ServerQueu.Test
         {
             var collectionSession = new System.Collections.Concurrent.ConcurrentQueue<Session>();
             var handlerSessions = new HandlerSessionListener(ref collectionSession);
-            Assert.AreEqual(0, handlerSessions.Sessions.Count);
+            Assert.AreEqual(0, collectionSession.Count);
 
             handlerSessions.AddClient(new System.Net.Sockets.TcpClient());
             handlerSessions.AddClient(new System.Net.Sockets.TcpClient());
 
-            Assert.AreEqual(1, handlerSessions.Sessions.Count);
-            Assert.IsTrue(handlerSessions.Sessions.ToArray()[0].CompleteClients());
+            Assert.AreEqual(1, collectionSession.Count);
+            Assert.IsTrue(collectionSession.ToArray()[0].CompleteClients());
 
             handlerSessions.AddClient(new System.Net.Sockets.TcpClient());
             handlerSessions.AddClient(new System.Net.Sockets.TcpClient());
 
-            Assert.AreEqual(2, handlerSessions.Sessions.Count);
-            Assert.IsTrue(handlerSessions.Sessions.ToArray()[1].CompleteClients());
+            Assert.AreEqual(2, collectionSession.Count);
+            Assert.IsTrue(collectionSession.ToArray()[1].CompleteClients());
         }
     }
 }

@@ -11,8 +11,4 @@
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Factories\" />
-  </ItemGroup>
-
 </Project>
