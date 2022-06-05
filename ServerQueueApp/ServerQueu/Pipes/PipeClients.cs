@@ -31,8 +31,11 @@ namespace ServerQueu
                 
                 foreach (var session in Session.SessionsInfo)
                 {
-                    var stream = session.TcpClient.GetStream();
-                    stream.Write(bufferToSend, 0, bufferToSend.Length);
+                    if (session.TcpClient!=null)
+                    {
+                        var stream = session.TcpClient.GetStream();
+                        stream.Write(bufferToSend, 0, bufferToSend.Length);
+                    }
                 }
             }
             
@@ -43,15 +46,20 @@ namespace ServerQueu
 
             foreach(var session in Session.SessionsInfo)
             {
-                int sizeData = session.TcpClient.Available;
-                if (sizeData>0)
-                {
-                    var stream = session.TcpClient.GetStream();
-                    byte[] buffer = new byte[sizeData];
-                    stream.Read(buffer, 0, buffer.Length);
 
-                    string mensaje = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-                    LectureToProcess.Enqueue(mensaje);
+                if (session.TcpClient!=null)
+                {
+                    int sizeData = session.TcpClient.Available;
+                    if (sizeData > 0)
+                    {
+                        var stream = session.TcpClient.GetStream();
+                        byte[] buffer = new byte[sizeData];
+                        stream.Read(buffer, 0, buffer.Length);
+
+                        string mensaje = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                        LectureToProcess.Enqueue(mensaje);
+                    }
+                    
                 }
             }
         }
