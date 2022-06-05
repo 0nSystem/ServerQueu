@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ServerQueu.Services;
+using ServerQueu.Sessions;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +10,9 @@ using System.Threading.Tasks;
 
 namespace TresEnRayaApp
 {
-    public class ListenerQueuServer
+    public class ListenerQueuServer<T>: IListenerQueuServer<T> where T : SessionInfo,new()
     {
+        private int Id;
         private readonly string Ip;
         private readonly int Port;
         private readonly int Backlog;
@@ -24,11 +27,11 @@ namespace TresEnRayaApp
             get { return _threadListener; }
         }
 
-        private HandlerSessionListener? HandlerSessionListener=null;
+        private HandlerSessionListener<T>? HandlerSessionListener=null;
 
         
 
-        public ListenerQueuServer(string ip,int port,int backlog, HandlerSessionListener handlerSessionListener)
+        public ListenerQueuServer(string ip,int port,int backlog, HandlerSessionListener<T> handlerSessionListener)
         {
             this.Ip = ip;
             this.Port = port;
@@ -47,7 +50,12 @@ namespace TresEnRayaApp
                     while (_tcpSocketServer.Server.IsBound&& !Finish)
                     {
                         TcpClient tcpClient= _tcpSocketServer.AcceptTcpClient();
-                        HandlerSessionListener.AddClient(tcpClient);
+                        var sessionInfo = new T
+                        {
+                            TcpClient = tcpClient,
+                            Id = Id
+                        };
+                        HandlerSessionListener.AddClient(sessionInfo);
                     }
                     _tcpSocketServer.Stop();
                 }
@@ -66,6 +74,7 @@ namespace TresEnRayaApp
             _tcpSocketServer=new TcpListener(System.Net.IPAddress.Parse(Ip),Port);
             _tcpSocketServer.Start(Backlog);
             Finish=false;
+            Id=0;
         }
 
     }

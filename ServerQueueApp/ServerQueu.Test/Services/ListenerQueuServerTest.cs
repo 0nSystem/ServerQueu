@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using NUnit.Framework;
+using ServerQueu.Sessions;
 using TresEnRayaApp;
 
 namespace ServerQueu.Test
@@ -16,9 +17,9 @@ namespace ServerQueu.Test
         [Test]
         public void Basic()
         {
-            var collection = new System.Collections.Concurrent.ConcurrentQueue<Session>();
-            var handler=new HandlerSessionListener(ref collection);
-            var listenerQueuServer = new ListenerQueuServer(Ip,Port,2,handler);
+            var collection = new System.Collections.Concurrent.ConcurrentQueue<Session<SessionInfo>>();
+            var handler=new HandlerSessionListener<SessionInfo>(2,ref collection);
+            var listenerQueuServer = new ListenerQueuServer<SessionInfo>(Ip,Port,2,handler);
             
             Assert.IsNull(listenerQueuServer.ThreadListener);
 
@@ -38,10 +39,10 @@ namespace ServerQueu.Test
         [Test]
         public void BasicFuntionWithPipe()
         {
-            var collection= new System.Collections.Concurrent.ConcurrentQueue<Session>();
-            var handler=new HandlerSessionListener(ref collection);
+            var collection= new System.Collections.Concurrent.ConcurrentQueue<Session<SessionInfo>>();
+            var handler=new HandlerSessionListener<SessionInfo>(2,ref collection);
 
-            var listenerQueuServer = new ListenerQueuServer(Ip, Port, 3,handler);
+            var listenerQueuServer = new ListenerQueuServer<SessionInfo>(Ip, Port, 3,handler);
             listenerQueuServer.RunThreads();
 
             var client1 = new TcpClient(Ip, Port);
@@ -55,7 +56,7 @@ namespace ServerQueu.Test
             {
                 var collectionToRead = new ConcurrentQueue<string>();
                 var collectionToWrite = new ConcurrentQueue<string>();
-                var PipeClien = new PipeClients(ref session,ref collectionToRead,ref collectionToWrite);
+                var PipeClien = new PipeClients<SessionInfo>(ref session,ref collectionToRead,ref collectionToWrite);
 
                 string mensaje = "HolaMundo";
                 collectionToWrite.Enqueue(mensaje);
