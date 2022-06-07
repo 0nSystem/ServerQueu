@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ServerQueu.Services;
+using ServerQueu.Sessions;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,18 +10,18 @@ using TresEnRayaApp;
 
 namespace ServerQueu
 {
-    public class GameTask
+    public class TaskServerQueu<T>:ITaskServerQueu<T> where T : SessionInfo
     {
-        public readonly Session Session;
-        public readonly PipeClients Pipe;
+        public readonly Session<T> Session;
+        public readonly PipeClients<T> Pipe;
         public readonly ConcurrentQueue<string> ToRead=new ConcurrentQueue<string>();
         public readonly ConcurrentQueue<string> ToWrite=new ConcurrentQueue<string>();
         
         //Tres en raya para controllar
-        public GameTask(ref Session session)
+        public TaskServerQueu(ref Session<T> session)
         {   
             Session = session;
-            Pipe= new PipeClients(ref Session,ref ToRead,ref ToWrite);
+            Pipe= new PipeClients<T>(ref Session,ref ToRead,ref ToWrite);
             
         }
 

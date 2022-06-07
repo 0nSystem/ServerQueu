@@ -1,4 +1,6 @@
 ﻿
+using ServerQueu.Handlers;
+using ServerQueu.Sessions;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Net.Sockets;
@@ -7,26 +9,29 @@ using System.Threading.Tasks;
 
 namespace TresEnRayaApp
 {
-    public class HandlerSessionListener
+    public class HandlerSessionListener<T>: IHandlerSessionListener<T> where T:SessionInfo
     {
-        private readonly ConcurrentQueue<Session> Sessions;
+        private readonly ConcurrentQueue<Session<T>> Sessions;
 
-        private Session? BufferSession=null;
+        private Session<T>? BufferSession=null;
 
-        public HandlerSessionListener(ref ConcurrentQueue<Session> sessions)
+        private readonly int MaxClients;
+
+        public HandlerSessionListener(int MaxClients,ref ConcurrentQueue<Session<T>> sessions)
         {
+            this.MaxClients=MaxClients;
             Sessions = sessions;
         }
-        public void AddClient(TcpClient tcpClient)
+        public void AddClient(T sessionInfo)
         {
             if (BufferSession==null)
             {
-                BufferSession = new Session();
-                AddNewSession(tcpClient);
+                BufferSession = new Session<T>(MaxClients);
+                AddNewSession(sessionInfo);
             }
             else if (!BufferSession.CompleteClients())
             {
-                AddNewSession(tcpClient);
+                AddNewSession(sessionInfo);
             }
 
             if (BufferSession.CompleteClients())
@@ -36,11 +41,11 @@ namespace TresEnRayaApp
 
         }
 
-        private void AddNewSession(TcpClient tcpClient)
+        private void AddNewSession(T session)
         {
             if (BufferSession!=null)
             {
-                BufferSession.AddClient(tcpClient);
+                BufferSession.AddClient(session);
             }
         }
         

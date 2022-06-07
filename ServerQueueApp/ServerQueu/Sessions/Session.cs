@@ -4,40 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using ServerQueu.Sessions;
 
 namespace TresEnRayaApp
 {
-    public class Session
+    public class Session<T> :ISession<T> where T:SessionInfo
     {
-        public TcpClient? Client1 { get; set; }
-        public TcpClient? Client2 { get; set; }
+        public List<T> SessionsInfo { get; }
+        public readonly int MaxClients;
 
-        public Session()
+        public Session(int MaxClients)
         {
-
+            this.MaxClients = MaxClients;
+            SessionsInfo = new List<T>();
         }
 
-        public void AddClient(TcpClient tcpClient)
+        public void AddClient(T sessionInfo)
         {
-            if (Client1==null)
-            {
-                Client1 = tcpClient;
-                return;
-            }
-            if (Client2==null)
-            {
-                Client2 = tcpClient;
-                return;
-            }
+            SessionsInfo.Add(sessionInfo);
         }
+
         public bool CompleteClients()
         {
-            if (Client1!=null&&Client2!=null)
-            {
-                return true;
-            }
+            if (SessionsInfo.Count<MaxClients)
+                return false;
 
-            return false;
+            return true;
         }
     }
 }

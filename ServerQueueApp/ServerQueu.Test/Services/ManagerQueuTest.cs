@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using ServerQueu.Sessions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -26,15 +27,15 @@ namespace ServerQueu.Test
         [Test]
         public void BasicFuntion()
         {
-            var collectionSession = new ConcurrentQueue<Session>();
-            collectionSession.Enqueue(new Session());
-            HandlerSessionListener handler=new HandlerSessionListener(ref collectionSession);
+            var collectionSession = new ConcurrentQueue<Session<SessionInfo>>();
+            collectionSession.Enqueue(new Session<SessionInfo>(2));
+            HandlerSessionListener<SessionInfo> handler=new HandlerSessionListener<SessionInfo>(2,ref collectionSession);
             
-            ListenerQueuServer listenerQueuServer = new ListenerQueuServer(IP,Port,2,handler);
+            ListenerQueuServer<SessionInfo> listenerQueuServer = new ListenerQueuServer<SessionInfo>(IP,Port,2,handler);
             listenerQueuServer.RunThreads();
 
 
-            var managerQueu = new ManagerQueu(ref collectionSession);
+            var managerQueu = new ManagerQueu<SessionInfo>(ref collectionSession);
             Assert.IsTrue(managerQueu.Sessions.Count == 1);
             Assert.IsTrue(managerQueu.RunFirstElement());
             Assert.IsTrue(managerQueu.Sessions.Count == 0);
