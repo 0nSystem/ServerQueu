@@ -16,7 +16,7 @@ namespace ServerQueu
         private readonly Session<T> Session;
         private readonly ConcurrentQueue<string> LectureToProcess;
         private readonly ConcurrentQueue<string> ResponseToClients;
-        public PipeClients(ref Session<T> session,ref ConcurrentQueue<string> LectureToProcess,ref ConcurrentQueue<string> ResponseToClients)
+        public PipeClients(Session<T> session,ConcurrentQueue<string> LectureToProcess,ConcurrentQueue<string> ResponseToClients)
         {
             Session = session;
             this.LectureToProcess = LectureToProcess;

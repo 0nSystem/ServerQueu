@@ -21,7 +21,7 @@ namespace ServerQueu.Test.Pipe
         public void BasicFuntionWithPipe()
         {
             var collection = new System.Collections.Concurrent.ConcurrentQueue<Session<SessionInfo>>();
-            var handler = new HandlerSessionListener<SessionInfo>(2, ref collection);
+            var handler = new HandlerSessionListener<SessionInfo>(2, collection);
 
             var listenerQueuServer = new ListenerQueuServer<SessionInfo>(Ip, Port, 3, handler);
             listenerQueuServer.RunThreads();
@@ -37,7 +37,7 @@ namespace ServerQueu.Test.Pipe
             {
                 var collectionToRead = new ConcurrentQueue<string>();
                 var collectionToWrite = new ConcurrentQueue<string>();
-                var PipeClien = new PipeClients<SessionInfo>(ref session, ref collectionToRead, ref collectionToWrite);
+                var PipeClien = new PipeClients<SessionInfo>(session, collectionToRead, collectionToWrite);
 
                 string mensaje = "HolaMundo";
                 collectionToWrite.Enqueue(mensaje);

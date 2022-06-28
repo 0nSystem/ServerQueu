@@ -1,4 +1,5 @@
-﻿using ServerQueu.Services;
+﻿using ServerQueu.Handlers;
+using ServerQueu.Services;
 using ServerQueu.Sessions;
 using System;
 using System.Collections.Concurrent;
@@ -18,20 +19,15 @@ namespace TresEnRayaApp
         private readonly int Backlog;
         private bool Finish;
 
-        private TcpListener? _tcpSocketServer = null;
-        public TcpListener? TcpSocketServer { get { return _tcpSocketServer; } }
+        public TcpListener? TcpSocketServer { get; private set; } = null;
+        
+        public Thread? ThreadListener { get; private set; } = null;
 
-        private Thread? _threadListener = null;
-        public Thread? ThreadListener
-        {
-            get { return _threadListener; }
-        }
-
-        private HandlerSessionListener<T>? HandlerSessionListener=null;
+        private IHandlerSessionListener<T>? HandlerSessionListener=null;
 
         
 
-        public ListenerQueuServer(string ip,int port,int backlog, HandlerSessionListener<T> handlerSessionListener)
+        public ListenerQueuServer(string ip,int port,int backlog, IHandlerSessionListener<T> handlerSessionListener)
         {
             this.Ip = ip;
             this.Port = port;
@@ -43,13 +39,13 @@ namespace TresEnRayaApp
         {
             EnabledTcpSocketServerToStart();
             
-            _threadListener= new Thread(() =>
+            ThreadListener= new Thread(() =>
             {
-                if (_tcpSocketServer != null&&HandlerSessionListener!=null)
+                if (TcpSocketServer != null&&HandlerSessionListener!=null)
                 {
-                    while (_tcpSocketServer.Server.IsBound&& !Finish)
+                    while (TcpSocketServer.Server.IsBound&& !Finish)
                     {
-                        TcpClient tcpClient= _tcpSocketServer.AcceptTcpClient();
+                        TcpClient tcpClient= TcpSocketServer.AcceptTcpClient();
                         var sessionInfo = new T
                         {
                             TcpClient = tcpClient,
@@ -57,12 +53,12 @@ namespace TresEnRayaApp
                         };
                         HandlerSessionListener.AddClient(sessionInfo);
                     }
-                    _tcpSocketServer.Stop();
+                    TcpSocketServer.Stop();
                 }
 
             });
 
-            _threadListener.Start();
+            ThreadListener.Start();
         }
         public void Close()
         {
@@ -71,8 +67,8 @@ namespace TresEnRayaApp
 
         private void EnabledTcpSocketServerToStart()
         {
-            _tcpSocketServer=new TcpListener(System.Net.IPAddress.Parse(Ip),Port);
-            _tcpSocketServer.Start(Backlog);
+            TcpSocketServer=new TcpListener(System.Net.IPAddress.Parse(Ip),Port);
+            TcpSocketServer.Start(Backlog);
             Finish=false;
             Id=0;
         }

@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using ServerQueu.Handlers;
 using ServerQueu.Sessions;
 using System;
 using System.Collections.Concurrent;
@@ -29,16 +30,29 @@ namespace ServerQueu.Test
         {
             var collectionSession = new ConcurrentQueue<Session<SessionInfo>>();
             collectionSession.Enqueue(new Session<SessionInfo>(2));
-            HandlerSessionListener<SessionInfo> handler=new HandlerSessionListener<SessionInfo>(2,ref collectionSession);
+            HandlerSessionListener<SessionInfo> handler=new HandlerSessionListener<SessionInfo>(2,collectionSession);
             
             ListenerQueuServer<SessionInfo> listenerQueuServer = new ListenerQueuServer<SessionInfo>(IP,Port,2,handler);
             listenerQueuServer.RunThreads();
 
+            ControllerSession<SessionInfo>.FactoryTaskServerQueu factoryTask= (session) => new TaskServerQueu<SessionInfo>(session);
+            ControllerSession<SessionInfo> controllerSession = new ControllerSession<SessionInfo>(factoryTask);
 
-            var managerQueu = new ManagerQueu<SessionInfo>(ref collectionSession);
-            Assert.IsTrue(managerQueu.Sessions.Count == 1);
-            Assert.IsTrue(managerQueu.RunFirstElement());
-            Assert.IsTrue(managerQueu.Sessions.Count == 0);
+            var handlerManagerQueu = new HandlerManagerQueu<SessionInfo>(collectionSession,controllerSession);
+            var managerQueu = new ManagerQueu<SessionInfo>(handlerManagerQueu);
+            Assert.AreEqual(1, collectionSession.Count);
+            managerQueu.Run();
+            Thread.Sleep(500);
+            managerQueu.Finish = true;
+            Assert.AreEqual(0, collectionSession.Count);
+            if (managerQueu.Thread!=null)
+            {
+                Assert.AreEqual(ThreadState.Stopped, managerQueu.Thread.ThreadState);
+            }
+            else
+            {
+                Assert.Fail();
+            }
 
 
         }

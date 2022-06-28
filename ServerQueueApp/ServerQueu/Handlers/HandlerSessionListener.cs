@@ -17,11 +17,12 @@ namespace TresEnRayaApp
 
         private readonly int MaxClients;
 
-        public HandlerSessionListener(int MaxClients,ref ConcurrentQueue<Session<T>> sessions)
+        public HandlerSessionListener(int MaxClients,ConcurrentQueue<Session<T>> sessions)
         {
             this.MaxClients=MaxClients;
             Sessions = sessions;
         }
+
         public void AddClient(T sessionInfo)
         {
             if (BufferSession==null)
