@@ -18,7 +18,7 @@ namespace ServerQueu.Test
         public void Basic()
         {
             var collection = new System.Collections.Concurrent.ConcurrentQueue<Session<SessionInfo>>();
-            var handler=new HandlerSessionListener<SessionInfo>(2,ref collection);
+            var handler=new HandlerSessionListener<SessionInfo>(2,collection);
             var listenerQueuServer = new ListenerQueuServer<SessionInfo>(Ip,Port,2,handler);
             
             Assert.IsNull(listenerQueuServer.ThreadListener);

@@ -1,4 +1,6 @@
-﻿using ServerQueu.Sessions;
+﻿using ServerQueu.Handlers;
+using ServerQueu.Services;
+using ServerQueu.Sessions;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -10,26 +12,34 @@ using TresEnRayaApp;
 
 namespace ServerQueu
 {
-    public class ManagerQueu<T> where T : SessionInfo
+    public class ManagerQueu<T>:IManagerQueu<T> where T : SessionInfo
     {
-        public readonly ConcurrentQueue<Session<T>> Sessions;
-        
+        public readonly IHandlerManagerQueu<T> HandlerManagerQueu;
+        public Thread? Thread { get; private set; } = null;
+        public bool Finish { get; set; } = true;
 
-        public ManagerQueu(ref ConcurrentQueue<Session<T>> sessions)
+        public ManagerQueu(IHandlerManagerQueu<T> handlerManagerQueu)
         {
-            Sessions = sessions;
+            this.HandlerManagerQueu = handlerManagerQueu;
         }
 
-        public bool RunFirstElement()
+        public void Run()
         {
-            //Pendiente de hacerlo como un servicio
-            if (Sessions.TryDequeue(out var newSession))
+            Finish = false;
+            Thread = new Thread(() =>
             {
-                TaskServerQueu<T> gameTask = new TaskServerQueu<T>(ref newSession);
-                return gameTask.RunTask();
-            }
-
-            return false;
+                while (!Finish)
+                {
+                    if (!this.HandlerManagerQueu.RunElement())
+                    {
+                        //Execution fail
+                    };
+                }
+            });
+            Thread.Start();
         }
+
+
+        
     }
 }

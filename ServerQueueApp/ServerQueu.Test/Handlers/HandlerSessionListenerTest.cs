@@ -19,7 +19,7 @@ namespace ServerQueu.Test
         public void AddClientesInHandlerSession()
         {
             var collectionSession = new System.Collections.Concurrent.ConcurrentQueue<Session<SessionInfo>>();
-            var handlerSessions = new HandlerSessionListener<SessionInfo>(2,ref collectionSession);
+            var handlerSessions = new HandlerSessionListener<SessionInfo>(2,collectionSession);
             Assert.AreEqual(0, collectionSession.Count);
 
             var sessionOne = new SessionInfo(1, new System.Net.Sockets.TcpClient());
