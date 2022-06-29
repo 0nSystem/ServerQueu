@@ -9,6 +9,6 @@ namespace ServerQueu.Sessions
 {
     public interface IControllerSession<T> where T : SessionInfo
     {
-        public bool ExecuteSession(Session<T> session);
+        public Action? MakeTaskSession(Session<T> session);
     }
 }

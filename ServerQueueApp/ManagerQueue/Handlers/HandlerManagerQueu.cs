@@ -12,21 +12,70 @@ namespace ServerQueu.Handlers
     public class HandlerManagerQueu<T> :IHandlerManagerQueu<T> where T:SessionInfo
     {
         private ConcurrentQueue<Session<T>> Sessions;
-        private IControllerSession<T> ControllerSession;
-        public HandlerManagerQueu(ConcurrentQueue<Session<T>> sessions,IControllerSession<T> controllerSession)
+        private ControllerSession<T> ControllerSession;
+
+        protected readonly TaskFactory TaskFactory;
+        protected List<Task> TaskListProccesOrRunning
+        {
+            get
+            {
+                lock (TaskListProccesOrRunning)
+                {
+                    return TaskListProccesOrRunning;
+                }
+            }
+            set
+            {
+                lock (TaskListProccesOrRunning)
+                {
+                    TaskListProccesOrRunning = value;
+                }
+            }
+        }
+        public HandlerManagerQueu(ConcurrentQueue<Session<T>> sessions,ControllerSession<T> controllerSession)
         {
             Sessions = sessions;
             ControllerSession = controllerSession;
+            TaskFactory = new TaskFactory();
         }
 
         public bool RunElement()
         {
             if (Sessions.TryDequeue(out var newSession))
             {
-                return ControllerSession.ExecuteSession(newSession);
+                Action? actionTaskSession=ControllerSession.MakeTaskSession(newSession);
+                if (actionTaskSession==null)
+                {
+                    return false;
+                }
+                Task task=TaskFactory.StartNew(actionTaskSession);
+                return AddListAndRunTask(task);
             }
 
             return false;
+        }
+        public bool CanRunElement()
+        {
+            return Sessions.Count > 0;
+        }
+        protected bool AddListAndRunTask(Task task)
+        {
+            int listProccesOrRunned = TaskListProccesOrRunning.Count;
+            TaskListProccesOrRunning.Add(task);
+            task.Start();
+            
+            if (listProccesOrRunned>=TaskListProccesOrRunning.Count)
+            {
+                return false;
+            }
+
+            if (task.Status!=TaskStatus.Running
+                ||task.Status!=TaskStatus.RanToCompletion)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

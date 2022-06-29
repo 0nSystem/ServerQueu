@@ -10,8 +10,6 @@ namespace ServerQueu.Services
 {
     public interface ITaskServerQueu<T> where T : SessionInfo
     {
-        Action<TaskServerQueu<T>>? GenerateActionTask();
-        bool AuthenticationBeforeGenerateTask(TaskServerQueu<T> taskServerQueu);
-        bool AuthenticationAfterGenerateTask(TaskServerQueu<T> taskServerQueu);
+        
     }
 }

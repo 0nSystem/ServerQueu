@@ -16,29 +16,28 @@ namespace ServerQueu.Sessions
         protected readonly FactoryTaskServerQueu FactoryTaskServerQueueAction;
         protected readonly TaskActionServerQueu TaskActionServerQueuAction;
 
-        protected readonly TaskFactory TaskFactory;
                 
         public ControllerSession(FactoryTaskServerQueu factoryTaskServerQueueAction,TaskActionServerQueu taskActionServerQueu)
         {
             FactoryTaskServerQueueAction = factoryTaskServerQueueAction;
             TaskActionServerQueuAction = taskActionServerQueu;
-            TaskFactory=new TaskFactory();
+
         }
 
-        public bool ExecuteSession(Session<T> session)
+        public Action? MakeTaskSession(Session<T> session)
         {
             if (FactoryTaskServerQueueAction == null || TaskActionServerQueuAction == null)
             {
-                return false;
+                return null;
             }
             TaskServerQueu<T>? taskToExecuteProccesClients = FactoryTaskServerQueueAction.Invoke(session);
             if (taskToExecuteProccesClients == null)
             {
-                return false;
+                return null;
             }
-            TaskFactory.StartNew(TaskActionServerQueuAction.Invoke(taskToExecuteProccesClients));
-
-            return true;
+            Action taskGenerated=TaskActionServerQueuAction.Invoke(taskToExecuteProccesClients);
+            
+            return taskGenerated;
         }
     }
 }
