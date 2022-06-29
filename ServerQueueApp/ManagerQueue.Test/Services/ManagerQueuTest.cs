@@ -36,7 +36,8 @@ namespace ServerQueu.Test
             listenerQueuServer.RunThreads();
 
             ControllerSession<SessionInfo>.FactoryTaskServerQueu factoryTask= (session) => new TaskServerQueu<SessionInfo>(session);
-            ControllerSession<SessionInfo> controllerSession = new ControllerSession<SessionInfo>(factoryTask);
+            ControllerSession<SessionInfo>.TaskActionServerQueu taskActionServerQueu = (taskServer) => () => { };
+            ControllerSession<SessionInfo> controllerSession = new ControllerSession<SessionInfo>(factoryTask,taskActionServerQueu);
 
             var handlerManagerQueu = new HandlerManagerQueu<SessionInfo>(collectionSession,controllerSession);
             var managerQueu = new ManagerQueu<SessionInfo>(handlerManagerQueu);

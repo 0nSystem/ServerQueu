@@ -14,6 +14,7 @@ namespace ServerQueu
 {
     public class ManagerQueu<T>:IManagerQueu<T> where T : SessionInfo
     {
+        public static int SECS_TO_PAUSE = 0;
         public readonly IHandlerManagerQueu<T> HandlerManagerQueu;
         public Thread? Thread { get; private set; } = null;
         public bool Finish { get; set; } = true;
@@ -33,6 +34,7 @@ namespace ServerQueu
                     if (!this.HandlerManagerQueu.RunElement())
                     {
                         //Execution fail
+                        Thread.Sleep(SECS_TO_PAUSE);
                     };
                 }
             });

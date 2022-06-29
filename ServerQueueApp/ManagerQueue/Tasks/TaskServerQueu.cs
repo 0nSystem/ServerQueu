@@ -12,12 +12,13 @@ namespace ServerQueu
 {
     public class TaskServerQueu<T>:ITaskServerQueu<T> where T : SessionInfo
     {
+
         protected Session<T>? Session;
         protected PipeClients<T>? Pipe;
+        
 
         protected readonly ConcurrentQueue<string> ToRead=new ConcurrentQueue<string>();
         protected readonly ConcurrentQueue<string> ToWrite=new ConcurrentQueue<string>();
-     
         
         //Tres en raya para controllar
         public TaskServerQueu(Session<T> session)
@@ -25,37 +26,48 @@ namespace ServerQueu
             Session = session;
             Pipe = new PipeClients<T>(Session, ToRead, ToWrite);
         }
-
-        public bool RunTask()
+        protected Action<TaskServerQueu<T>> MakeAction()
+        {
+            return (TaskServerQueu) => { };
+            
+        }
+        public Action<TaskServerQueu<T>>? GenerateActionTask()
         {
             
-            if (!AuthenticationBeforeTask())
+            if (!AuthenticationBeforeGenerateTask(this))
             {
-               return false;
+                return null;
+            }
+            Action<TaskServerQueu<T>> task= MakeAction();
+            
+
+            if (!AuthenticationAfterGenerateTask(this))
+            {
+                return null;
             }
 
-            return ThreadPool.QueueUserWorkItem(CreateSessionTask);
+            return task;
         }
-        public bool AuthenticationBeforeTask()
+        public bool AuthenticationBeforeGenerateTask(TaskServerQueu<T> taskServerQueu)
         {
-            if (Session==null)
+            if (taskServerQueu.Session==null)
             {
                 return false;
             }
-            if (Session!=null&&!Session.CompleteClients())
+            if (taskServerQueu.Session !=null&&!taskServerQueu.Session.CompleteClients())
             {
                 return false;
             }
-            if (Pipe==null)
+            if (taskServerQueu.Pipe ==null)
             {
                 return false;
             }
 
             return true;
         }
-        protected void CreateSessionTask(Object? stateInfo)
+        public bool AuthenticationAfterGenerateTask(TaskServerQueu<T> taskServerQueu)
         {
-            
+            return true;
         }
     }
 }

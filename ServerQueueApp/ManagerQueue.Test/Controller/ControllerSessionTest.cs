@@ -14,7 +14,7 @@ namespace ServerQueu.Test.Controller
         [Test]
         public void basicFuntion()
         {
-            ControllerSession<SessionInfo> controllerSession= new ControllerSession<SessionInfo>((session)=>new TaskServerQueu<SessionInfo>(session));
+            ControllerSession<SessionInfo> controllerSession= new ControllerSession<SessionInfo>((session)=>new TaskServerQueu<SessionInfo>(session), (taskServerQueue) => () => { });
             Session<SessionInfo> session = new Session<SessionInfo>(0);
             Assert.IsTrue(controllerSession.ExecuteSession(session));
         }
