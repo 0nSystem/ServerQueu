@@ -1,22 +1,33 @@
-﻿using NUnit.Framework;
+﻿using ManagerQueue.Controller;
+using ManagerQueue.Tasks;
+using NUnit.Framework;
 using ServerQueu.Sessions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TresEnRayaApp;
 
-namespace ServerQueu.Test.Controller
+namespace ManagerQueue.Test.Controller
 {
     class ControllerSessionTest
     {
         [Test]
         public void basicFuntion()
         {
-            ControllerSession<SessionInfo> controllerSession= new ControllerSession<SessionInfo>((session)=>new TaskServerQueu<SessionInfo>(session), (taskServerQueue) => () => { });
+            string mensaje = "hola";
+            string bufferMensaje = "";
+            ControllerSession<SessionInfo> controllerSession= new ControllerSession<SessionInfo>((session)=>new TaskServerQueu<SessionInfo>(session), (taskServerQueue) => () => { bufferMensaje = mensaje; });
             Session<SessionInfo> session = new Session<SessionInfo>(0);
-            Assert.IsTrue(controllerSession.ExecuteSession(session));
+            
+            Action? action = controllerSession.MakeTaskSession(session);
+            if (action != null)
+            {
+                Task task = Task.Run(action);
+                Task.WaitAll(task);
+                Assert.AreEqual(mensaje,bufferMensaje);
+            }
+            else
+                Assert.Fail();
+            
         }
     }
 }

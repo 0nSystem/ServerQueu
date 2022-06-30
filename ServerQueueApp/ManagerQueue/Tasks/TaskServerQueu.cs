@@ -1,4 +1,5 @@
-﻿using ServerQueu.Services;
+﻿using ManagerQueue.Pipes;
+using ServerQueu.Services;
 using ServerQueu.Sessions;
 using System;
 using System.Collections.Concurrent;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TresEnRayaApp;
 
-namespace ServerQueu
+namespace ManagerQueue.Tasks
 {
     public class TaskServerQueu<T>:ITaskServerQueu<T> where T : SessionInfo
     {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TresEnRayaApp;
-using System.Threading.Tasks;
+﻿using TresEnRayaApp;
+using ServerQueu.Sessions;
+using ManagerQueue.Tasks;
 
-namespace ServerQueu.Sessions
+namespace ManagerQueue.Controller
 {
     public class ControllerSession<T>:IControllerSession<T> where T : SessionInfo
     {

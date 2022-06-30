@@ -1,5 +1,6 @@
 ﻿
 
+using ManagerQueue.Pipes;
 using NUnit.Framework;
 using ServerQueu.Sessions;
 using System.Collections.Concurrent;
@@ -10,7 +11,7 @@ using TresEnRayaApp;
 
 
 
-namespace ServerQueu.Test.Pipe
+namespace ManagerQueue.Test.Pipe
 {
     public class PipeClients
     {

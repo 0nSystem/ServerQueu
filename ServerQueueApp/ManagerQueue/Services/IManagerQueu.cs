@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerQueu.Services
+namespace ManagerQueue.Services
 {
     public interface IManagerQueu<T> where T : SessionInfo
     {

@@ -1,4 +1,5 @@
-﻿using ServerQueu.Sessions;
+﻿using ManagerQueue.Controller;
+using ServerQueu.Sessions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TresEnRayaApp;
 
-namespace ServerQueu.Handlers
+namespace ManagerQueue.Handlers
 {
     public class HandlerManagerQueu<T> :IHandlerManagerQueu<T> where T:SessionInfo
     {
@@ -49,6 +50,7 @@ namespace ServerQueu.Handlers
                     return false;
                 }
                 Task task=TaskFactory.StartNew(actionTaskSession);
+                task.Start();
                 return AddListAndRunTask(task);
             }
 

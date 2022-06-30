@@ -6,8 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TresEnRayaApp;
 
-namespace ServerQueu.Services
-{
+namespace ManagerQueue.Tasks{
     public interface ITaskServerQueu<T> where T : SessionInfo
     {
         

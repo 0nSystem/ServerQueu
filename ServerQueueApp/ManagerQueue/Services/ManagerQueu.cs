@@ -1,4 +1,5 @@
-﻿using ServerQueu.Handlers;
+﻿using ManagerQueue.Handlers;
+using ServerQueu.Handlers;
 using ServerQueu.Services;
 using ServerQueu.Sessions;
 using System;
@@ -10,11 +11,12 @@ using System.Text;
 using System.Threading.Tasks;
 using TresEnRayaApp;
 
-namespace ServerQueu
+namespace ManagerQueue.Services
 {
     public class ManagerQueu<T>:IManagerQueu<T> where T : SessionInfo
     {
-        public static int SECS_TO_PAUSE = 0;
+        public static int SECS_TO_PAUSE_ERROR = 0;
+        public static int SECS_TO_RESUME = 0;
         public readonly IHandlerManagerQueu<T> HandlerManagerQueu;
         public Thread? Thread { get; private set; } = null;
         public bool Finish { get; set; } = true;
@@ -34,8 +36,9 @@ namespace ServerQueu
                     if (!this.HandlerManagerQueu.RunElement())
                     {
                         //Execution fail
-                        Thread.Sleep(SECS_TO_PAUSE);
+                        Thread.Sleep(SECS_TO_PAUSE_ERROR);
                     };
+                    Thread.Sleep(SECS_TO_RESUME);
                 }
             });
             Thread.Start();

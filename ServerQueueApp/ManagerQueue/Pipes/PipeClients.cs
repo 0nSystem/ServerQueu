@@ -1,5 +1,4 @@
-﻿using ServerQueu.Pipes;
-using ServerQueu.Sessions;
+﻿using ServerQueu.Sessions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TresEnRayaApp;
 
-namespace ServerQueu
+namespace ManagerQueue.Pipes
 {
     public class PipeClients<T>: IPipeClient<T> where T : SessionInfo
     {

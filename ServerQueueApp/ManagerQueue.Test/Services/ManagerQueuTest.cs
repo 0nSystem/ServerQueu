@@ -1,60 +1,73 @@
-﻿using NUnit.Framework;
-using ServerQueu.Handlers;
+﻿using ManagerQueue.Controller;
+using ManagerQueue.Handlers;
+using ManagerQueue.Services;
+using ManagerQueue.Tasks;
+using NUnit.Framework;
+using ServerQueu;
 using ServerQueu.Sessions;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using TresEnRayaApp;
 
-namespace ServerQueu.Test
+namespace ManagerQueue.Test
 {
     public class ManagerQueuTest
     {
 
         private string IP=default!;
         private int Port;
+        private ConcurrentQueue<Session<SessionInfo>> collectionSession = new ConcurrentQueue<Session<SessionInfo>>();
+        
+        private HandlerSessionListener<SessionInfo> handlerListener;
+        private ListenerQueuServer<SessionInfo> listenerQueuServer;
+
+        private ControllerSession<SessionInfo> controllerSession;
+        private HandlerManagerQueu<SessionInfo> handlerManagerQueu;
+        private ManagerQueu<SessionInfo> managerQueue;
 
         [SetUp]
         public void SetUp()
         {
             IP="127.0.0.1";
             Port = 8000;
+        
+            handlerListener= new HandlerSessionListener<SessionInfo>(2, collectionSession);
+            listenerQueuServer = new ListenerQueuServer<SessionInfo>(IP, Port,2, handlerListener);
+
+            ControllerSession<SessionInfo>.FactoryTaskServerQueu factoryTask = (session) => new TaskServerQueu<SessionInfo>(session);
+            ControllerSession<SessionInfo>.TaskActionServerQueu taskActionServerQueu = (taskServer) => () => { };
+            controllerSession = new ControllerSession<SessionInfo>(factoryTask, taskActionServerQueu);
+        
+            handlerManagerQueu= new HandlerManagerQueu<SessionInfo>(collectionSession, controllerSession);
+            managerQueue=new ManagerQueu<SessionInfo>(handlerManagerQueu);
         }
         [Test]
         public void BasicFuntion()
         {
-            var collectionSession = new ConcurrentQueue<Session<SessionInfo>>();
-            collectionSession.Enqueue(new Session<SessionInfo>(2));
-            HandlerSessionListener<SessionInfo> handler=new HandlerSessionListener<SessionInfo>(2,collectionSession);
             
-            ListenerQueuServer<SessionInfo> listenerQueuServer = new ListenerQueuServer<SessionInfo>(IP,Port,2,handler);
+            collectionSession.Enqueue(new Session<SessionInfo>(2));
             listenerQueuServer.RunThreads();
 
-            ControllerSession<SessionInfo>.FactoryTaskServerQueu factoryTask= (session) => new TaskServerQueu<SessionInfo>(session);
-            ControllerSession<SessionInfo>.TaskActionServerQueu taskActionServerQueu = (taskServer) => () => { };
-            ControllerSession<SessionInfo> controllerSession = new ControllerSession<SessionInfo>(factoryTask,taskActionServerQueu);
 
-            var handlerManagerQueu = new HandlerManagerQueu<SessionInfo>(collectionSession,controllerSession);
-            var managerQueu = new ManagerQueu<SessionInfo>(handlerManagerQueu);
+            int pause = 200;
+            ManagerQueu<SessionInfo>.SECS_TO_RESUME = pause;
+
             Assert.AreEqual(1, collectionSession.Count);
-            managerQueu.Run();
-            Thread.Sleep(500);
-            managerQueu.Finish = true;
-            Assert.AreEqual(0, collectionSession.Count);
-            if (managerQueu.Thread!=null)
-            {
-                Assert.AreEqual(ThreadState.Stopped, managerQueu.Thread.ThreadState);
-            }
-            else
+            
+            managerQueue.Run();
+            if (managerQueue.Thread==null)
             {
                 Assert.Fail();
+                return;
             }
+            Assert.AreEqual(ThreadState.Running, managerQueue.Thread.ThreadState);
 
+            Thread.Sleep(pause*2);
+            Assert.AreEqual(0,collectionSession.Count);
+
+            managerQueue.Finish = false;
+            Thread.Sleep(pause);
+            Assert.AreEqual(ThreadState.Stopped, managerQueue.Thread.ThreadState);
 
         }
     }
