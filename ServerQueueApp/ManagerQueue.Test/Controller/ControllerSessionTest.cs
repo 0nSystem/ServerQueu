@@ -26,7 +26,9 @@ namespace ManagerQueue.Test.Controller
                 Assert.AreEqual(mensaje,bufferMensaje);
             }
             else
+            {
                 Assert.Fail();
+            }
             
         }
     }

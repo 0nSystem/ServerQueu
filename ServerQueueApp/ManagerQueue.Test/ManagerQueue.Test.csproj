@@ -19,8 +19,4 @@
     <ProjectReference Include="..\ServerQueu\ServerQueu.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Handlers\" />
-  </ItemGroup>
-
 </Project>

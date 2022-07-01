@@ -33,7 +33,13 @@ namespace ManagerQueue.Handlers
                 }
             }
         }
-        public HandlerManagerQueu(ConcurrentQueue<Session<T>> sessions,ControllerSession<T> controllerSession)
+        public HandlerManagerQueu(ConcurrentQueue<Session<T>> sessions,ControllerSession<T> controllerSession,TaskFactory taskFactory)
+        {
+            Sessions = sessions;
+            ControllerSession = controllerSession;
+            TaskFactory = taskFactory;
+        }
+        public HandlerManagerQueu(ConcurrentQueue<Session<T>> sessions, ControllerSession<T> controllerSession)
         {
             Sessions = sessions;
             ControllerSession = controllerSession;
@@ -50,7 +56,6 @@ namespace ManagerQueue.Handlers
                     return false;
                 }
                 Task task=TaskFactory.StartNew(actionTaskSession);
-                task.Start();
                 return AddListAndRunTask(task);
             }
 
