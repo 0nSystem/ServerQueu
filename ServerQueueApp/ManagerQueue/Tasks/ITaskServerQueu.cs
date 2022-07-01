@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TresEnRayaApp;
 
-namespace ServerQueu.Services
-{
-    public interface IManagerQueu<T> where T : SessionInfo
+namespace ManagerQueue.Tasks{
+    public interface ITaskServerQueu<T> where T : SessionInfo
     {
-        void Run();
+        
     }
 }

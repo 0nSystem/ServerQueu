@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerQueu.Handlers
+namespace ManagerQueue.Services
 {
-    public interface IHandlerManagerQueu<T> where T : SessionInfo
+    public interface IManagerQueu<T> where T : SessionInfo
     {
-        bool RunElement();
+        void Run();
     }
 }

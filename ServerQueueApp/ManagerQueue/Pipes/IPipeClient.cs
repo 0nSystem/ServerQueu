@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerQueu.Pipes
+namespace ManagerQueue.Pipes
 {
     public interface IPipeClient<T> where T : SessionInfo
     {
