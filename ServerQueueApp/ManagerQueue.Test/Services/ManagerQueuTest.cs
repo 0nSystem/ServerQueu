@@ -63,7 +63,7 @@ namespace ManagerQueue.Test
                 Assert.AreEqual(1, countWithOneSession);
                 Assert.AreEqual(ThreadState.Running, stateRunning);
                 Assert.AreEqual(0, countWithZeroSession);
-                Assert.AreEqual(ThreadState.Stopped, stateStopped);
+                Assert.IsTrue(stateStopped == ThreadState.Stopped|| stateStopped == ThreadState.WaitSleepJoin);
             });
         }
     }

@@ -39,7 +39,9 @@ namespace ManagerQueue.Test.Handlers
         {
             string exceptedMsg = "hola";
             string returnedMsg = "";
-            _actionTask = (a) => () => { returnedMsg = exceptedMsg; };
+            _actionTask = (a) => () => {
+                returnedMsg = exceptedMsg;
+            };
             _controllerSession = new ControllerSession<SessionInfo>(_actionfactoryTask, _actionTask);
             _handlerManagerQueu = new HandlerManagerQueu<SessionInfo>(_sessions, _controllerSession, _taskfactory);
 
@@ -48,12 +50,14 @@ namespace ManagerQueue.Test.Handlers
             bool isRunningElement = _handlerManagerQueu.RunElement();
             int countSessionIsZero = _sessions.Count;
 
-            Assert.AreEqual(1, countSessionIsOne);
-            Assert.IsTrue(canRunElement);
-            Assert.IsTrue(isRunningElement);
-            Assert.AreEqual(0, countSessionIsZero);
-            Assert.AreEqual(exceptedMsg, returnedMsg);
-
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(1, countSessionIsOne);
+                Assert.IsTrue(canRunElement);
+                Assert.IsTrue(isRunningElement);
+                Assert.AreEqual(0, countSessionIsZero);
+                Assert.AreEqual(exceptedMsg, returnedMsg);
+            });
         }
     }
 }

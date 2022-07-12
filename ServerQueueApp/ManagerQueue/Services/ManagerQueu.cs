@@ -19,11 +19,12 @@ namespace ManagerQueue.Services
         public static int SECS_TO_RESUME = 0;
         public readonly IHandlerManagerQueu<T> HandlerManagerQueu;
         public Thread? Thread { get; private set; } = null;
-        public bool Finish { get; set; } = true;
+        public bool Finish;
 
         public ManagerQueu(IHandlerManagerQueu<T> handlerManagerQueu)
         {
             this.HandlerManagerQueu = handlerManagerQueu;
+            Finish= true;
         }
 
         public void Run()

@@ -16,34 +16,22 @@ namespace ManagerQueue.Handlers
         private ControllerSession<T> ControllerSession;
 
         protected readonly TaskFactory TaskFactory;
-        protected List<Task> TaskListProccesOrRunning
-        {
-            get
-            {
-                lock (TaskListProccesOrRunning)
-                {
-                    return TaskListProccesOrRunning;
-                }
-            }
-            set
-            {
-                lock (TaskListProccesOrRunning)
-                {
-                    TaskListProccesOrRunning = value;
-                }
-            }
-        }
+
+        protected SynchronizedCollection<Task> TaskListProccesOrRunning;
+        
         public HandlerManagerQueu(ConcurrentQueue<Session<T>> sessions,ControllerSession<T> controllerSession,TaskFactory taskFactory)
         {
             Sessions = sessions;
             ControllerSession = controllerSession;
             TaskFactory = taskFactory;
+            TaskListProccesOrRunning= new SynchronizedCollection<Task>();
         }
         public HandlerManagerQueu(ConcurrentQueue<Session<T>> sessions, ControllerSession<T> controllerSession)
         {
             Sessions = sessions;
             ControllerSession = controllerSession;
             TaskFactory = new TaskFactory();
+            TaskListProccesOrRunning = new SynchronizedCollection<Task>();
         }
 
         public bool RunElement()
@@ -53,6 +41,7 @@ namespace ManagerQueue.Handlers
                 if (Sessions.TryDequeue(out var newSession))
                 {
                     Action? actionTaskSession = ControllerSession.MakeTaskSession(newSession);
+                    
                     if (actionTaskSession == null)
                     {
                         return false;
@@ -70,20 +59,8 @@ namespace ManagerQueue.Handlers
         }
         protected bool AddListAndRunTask(Task task)
         {
-            int listProccesOrRunned = TaskListProccesOrRunning.Count;
-            TaskListProccesOrRunning.Add(task);
-            task.Start();
             
-            if (listProccesOrRunned>=TaskListProccesOrRunning.Count)
-            {
-                return false;
-            }
-
-            if (task.Status!=TaskStatus.Running
-                ||task.Status!=TaskStatus.RanToCompletion)
-            {
-                return false;
-            }
+            TaskListProccesOrRunning.Add(task);
 
             return true;
         }
