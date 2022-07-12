@@ -13,6 +13,7 @@ using TresEnRayaApp;
 
 namespace ManagerQueue.Test.Handlers
 {
+    [TestFixture]
     public class HandlersManageQueueTest
     {
         private ConcurrentQueue<Session<SessionInfo>> _sessions;
@@ -39,19 +40,20 @@ namespace ManagerQueue.Test.Handlers
             string exceptedMsg = "hola";
             string returnedMsg = "";
             _actionTask = (a) => () => { returnedMsg = exceptedMsg; };
-            _controllerSession = new ControllerSession<SessionInfo>(_actionfactoryTask,_actionTask);
-            _handlerManagerQueu = new HandlerManagerQueu<SessionInfo>(_sessions, _controllerSession,_taskfactory);
+            _controllerSession = new ControllerSession<SessionInfo>(_actionfactoryTask, _actionTask);
+            _handlerManagerQueu = new HandlerManagerQueu<SessionInfo>(_sessions, _controllerSession, _taskfactory);
 
-            Assert.IsTrue(_handlerManagerQueu.CanRunElement());
+            int countSessionIsOne = _sessions.Count;
+            bool canRunElement = _handlerManagerQueu.CanRunElement();
+            bool isRunningElement = _handlerManagerQueu.RunElement();
+            int countSessionIsZero = _sessions.Count;
 
-            bool isRunningElement =_handlerManagerQueu.RunElement();
-            
-            Assert.Multiple(() =>
-            {
-                Assert.IsTrue(isRunningElement);
-                Assert.AreEqual(0, _sessions.Count);
-                Assert.AreEqual(exceptedMsg, returnedMsg);
-            });
+            Assert.AreEqual(1, countSessionIsOne);
+            Assert.IsTrue(canRunElement);
+            Assert.IsTrue(isRunningElement);
+            Assert.AreEqual(0, countSessionIsZero);
+            Assert.AreEqual(exceptedMsg, returnedMsg);
+
         }
     }
 }
