@@ -48,15 +48,18 @@ namespace ManagerQueue.Handlers
 
         public bool RunElement()
         {
-            if (Sessions.TryDequeue(out var newSession))
+            if (CanRunElement())
             {
-                Action? actionTaskSession=ControllerSession.MakeTaskSession(newSession);
-                if (actionTaskSession==null)
+                if (Sessions.TryDequeue(out var newSession))
                 {
-                    return false;
+                    Action? actionTaskSession = ControllerSession.MakeTaskSession(newSession);
+                    if (actionTaskSession == null)
+                    {
+                        return false;
+                    }
+                    Task task = TaskFactory.StartNew(actionTaskSession);
+                    return AddListAndRunTask(task);
                 }
-                Task task=TaskFactory.StartNew(actionTaskSession);
-                return AddListAndRunTask(task);
             }
 
             return false;
